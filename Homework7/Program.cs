@@ -10,6 +10,20 @@ namespace Homework7
     {
         static void Main(string[] args)
         {
+            CopyContext copyContext = new CopyContext();
+
+            try
+            {
+                copyContext.Pay(10);
+                copyContext.ChooseDevice(ChooseDeviceState.DEVICE_WIFI);
+                copyContext.ChooseDoc("Hello.doc");
+                copyContext.PrintDoc();
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            Console.ReadLine();
         }
     }
 }
