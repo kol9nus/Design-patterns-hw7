@@ -59,9 +59,14 @@ namespace Homework7
         {
             Balance = balance;
         }
+
+        public abstract void Pay(CopyContext copyContext, int amount);
+
         public abstract void ChooseDevice(CopyContext copyContext, string device);
 
         public abstract void ChooseDoc(CopyContext copyContext, string name);
+
+        public abstract void PrintDoc(CopyContext copyContext);
 
         public int GiveChange(CopyContext copyContext)
         {
@@ -70,10 +75,6 @@ namespace Homework7
             copyContext.state = new PayState();
             return i;
         }
-
-        public abstract void Pay(CopyContext copyContext, int amount);
-
-        public abstract void PrintDoc(CopyContext copyContext);
     }
 
     public class PayState : StateBase
@@ -111,19 +112,7 @@ namespace Homework7
         }
     }
 
-    public abstract class NotPayStateBase : StateBase
-    {
-        public NotPayStateBase(int balance) : base(balance)
-        {
-        }
-
-        public override void Pay(CopyContext copyContext, int amount)
-        {
-            throw new Exception("You already paid!");
-        }
-    }
-
-    public class ChooseDeviceState : NotPayStateBase
+    public class ChooseDeviceState : StateBase
     {
 
         public static readonly string DEVICE_WIFI = "WiFi";
@@ -157,9 +146,14 @@ namespace Homework7
         {
             throw new Exception("Choose device first!");
         }
+
+        public override void Pay(CopyContext copyContext, int amount)
+        {
+            throw new Exception("You already paid!");
+        }
     }
 
-    public abstract class ChooseDocBase : NotPayStateBase
+    public abstract class ChooseDocBase : StateBase
     {
         public ChooseDocBase(int balance) : base(balance)
         {
@@ -173,6 +167,11 @@ namespace Homework7
         public override void PrintDoc(CopyContext copyContext)
         {
             throw new Exception("Choose doc first!");
+        }
+
+        public override void Pay(CopyContext copyContext, int amount)
+        {
+            throw new Exception("You already paid!");
         }
     }
 
@@ -198,7 +197,7 @@ namespace Homework7
         }
     }
 
-    public abstract class PrintDocumentStateBase : NotPayStateBase
+    public abstract class PrintDocumentStateBase : StateBase
     {
         protected string DocumentName { get; }
         protected string DeviceType { get; set; }
@@ -231,6 +230,11 @@ namespace Homework7
                 Console.WriteLine($"Осталось денег: {Balance}");
                 ReturnOneStateBack(copyContext);
             }
+        }
+
+        public override void Pay(CopyContext copyContext, int amount)
+        {
+            throw new Exception("You already paid!");
         }
 
         protected abstract void ReturnOneStateBack(CopyContext copyContext);
